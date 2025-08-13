@@ -8,7 +8,7 @@ export const crearPublicacionDB = async(publicacion_id, usuario_id, titulo, cont
 
 export const mostrarPublicacionesDB = async(limite, offset) => {
     const query = `SELECT 
-    titulo, contenido
+    publicacion_id, titulo, contenido
     FROM publicaciones
     ORDER BY fecha_hora 
     LIMIT ? OFFSET ?`
