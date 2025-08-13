@@ -1,16 +1,9 @@
-import { Router } from 'express';
-// Controlador de autenticación
-import { createUser, login, setPassword } from '../controllers/auth.controller.js'; 
+import {Router} from 'express'
+import {registrarUsuario, loginUsuario} from '../controllers/auth.controller.js'
 
-const authRouter = Router();
+const authRouter = Router()
 
-// POST /api/auth/register: Registro de usuario
-authRouter.post('/register', createUser); 
+authRouter.post('/register', registrarUsuario)
+authRouter.post('/login', loginUsuario)
 
-// POST /api/auth/login: Inicio de sesión
-authRouter.post('/login', login); 
-
-// PATCH /api/auth/set-password: Cambio de contraseña 
-authRouter.patch('/set-password', setPassword); 
-
-export default authRouter;
+export default authRouter

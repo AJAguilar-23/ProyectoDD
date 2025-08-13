@@ -1,32 +1,29 @@
 {
   "name": "proyectodd",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Proyecto Final",
+  "homepage": "https://github.com/AJAguilar-23/ProyectoDD_Temp#readme",
+  "bugs": {
+    "url": "https://github.com/AJAguilar-23/ProyectoDD_Temp/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AJAguilar-23/ProyectoDD.git"
+    "url": "git+https://github.com/AJAguilar-23/ProyectoDD_Temp.git"
   },
-  "keywords": [],
+  "license": "ISC",
   "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/AJAguilar-23/ProyectoDD/issues"
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "homepage": "https://github.com/AJAguilar-23/ProyectoDD#readme",
-  "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
-    "resend": "^6.0.1",
     "uuid": "^11.1.0",
     "zod": "^4.0.17"
   }

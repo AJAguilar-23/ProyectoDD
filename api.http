@@ -1,93 +1,66 @@
-# Autenticación
-
-### Registro de usuario 
+### Registrar un usuario nuevo
 POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "Nuevo Usuario",
-  "email": "nuevo.usuario@example.com",
-  "phone": "12345678",
-  "role": "user"
+    "nombre": "prueba",
+    "correo": "prueba@gmail.com",
+    "contrasena": "password"
 }
 
-### Inicio de sesión
+
+### Hacer login con un usuario
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "nuevo.usuario@example.com",
-  "password": "nuevaPasswordSegura"
-}
-
-### Cambio de contraseña 
-# Este endpoint requiere que el usuario esté autenticado. Nota: Usar el token JWT obtenido del login
-PATCH http://localhost:3000/api/auth/set-password
-Content-Type: application/json
-Authorization: Bearer TOKEN_JWT
-
-{
-  "old_password": "1234",
-  "new_password": "nuevaPasswordSegura",
-  "confirm_password": "nuevaPasswordSegura"
+    "correo": "prueba@gmail.com",
+    "contrasena": "password"
 }
 
 
+### Acceder a todas las publicaciones
+GET http://localhost:3000/api/publicaciones?pag=1
 
+### Ver una publicacion especifica
+GET http://localhost:3000/api/publicaciones/d4ecc326-fc3e-4ba2-ae4f-e23e07dd1c2a
 
-# Publicaciones
-
-### Listar todas las publicaciones con paginación
-# Esta ruta es pública y no requiere autenticación.
-# Para paginación, usar los parámetros `page` y `limit` pagina por defecto 1 y límite 10.
-GET http://localhost:3000/api/publicaciones?page=1&limit=10
-
-### Ver una publicación específica
-# Esta ruta es pública y no requiere autenticación. Nota: Usar un ID de publicación existente
-GET http://localhost:3000/api/publicaciones/ID_PUBLICACION 
-
-### Crear una nueva publicación
-# Requiere que el usuario esté autenticado. Nota: Usar el token JWT obtenido del login
+### Crear una publicacion
 POST http://localhost:3000/api/publicaciones
 Content-Type: application/json
-Authorization: Bearer TOKEN_JWT
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjoiYjY5YTI4ZmQtYTAwOS00MzUzLWE3N2EtZTNhMzEzZTA4OTZlIiwiaWF0IjoxNzU1MDY5NTA3LCJleHAiOjE3NTUxMTI3MDd9.AAIzNdcYA7q0GSa-DOBJWE1-w77u8g9ISJhbdR-5bdU
 
-{
-  "titulo": "Mi Primera Publicación de Blog 5",
-  "contenido": "Este es el contenido de mi primera publicación. ¡Espero que les guste!"
+{ 
+    "titulo": "Este es un comentario nuevo",
+    "contenido": "Contenido"
 }
 
-### Editar una publicación (solo el autor)
-# Requiere autenticación y verificación de propiedad. Nota: Usar el ID de la publicación a editar y Usar el token JWT obtenido del login
-PUT http://localhost:3000/api/publicaciones/ID_PUBLICACION
+### Editar una publicacion especifica
+
+PUT http://localhost:3000/api/publicaciones/468f313e-127c-4563-a667-b3f14aadfa21
 Content-Type: application/json
-Authorization: Bearer TOKEN_JWT
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjoiYjY5YTI4ZmQtYTAwOS00MzUzLWE3N2EtZTNhMzEzZTA4OTZlIiwiaWF0IjoxNzU1MDY5NTA3LCJleHAiOjE3NTUxMTI3MDd9.AAIzNdcYA7q0GSa-DOBJWE1-w77u8g9ISJhbdR-5bdU
 
 {
-  "titulo": "Mi Publicación 2 Editada",
-  "contenido": "Este es el contenido actualizado de mi publicación. ¡Ahora es mejor!"
+    "titulo": "Ultima edicion realizada",
+    "contenido": "Contenido"
 }
 
-### Eliminar una publicación (solo el autor)
-# Requiere autenticación y verificación de propiedad. Nota: Usar el ID de la publicación a eliminar y Usar el token JWT obtenido del login
-DELETE http://localhost:3000/api/publicaciones/ID_PUBLICACION
-Authorization: Bearer TOKEN_JWT
+### Borrar una publicacion
 
+DELETE http://localhost:3000/api/publicaciones/d4ecc326-fc3e-4ba2-ae4f-e23e07dd1c2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjoiYjY5YTI4ZmQtYTAwOS00MzUzLWE3N2EtZTNhMzEzZTA4OTZlIiwiaWF0IjoxNzU1MDY5NTA3LCJleHAiOjE3NTUxMTI3MDd9.AAIzNdcYA7q0GSa-DOBJWE1-w77u8g9ISJhbdR-5bdU
 
+### Ver todos los comentarios de una publicacion
 
+GET http://localhost:3000/api/publicaciones/65bd8a46-4989-4ddb-95f4-e319b42b9f27/comentarios
 
-# Comentarios
+### Comentar en una publicacion
 
-### Ver todos los comentarios de una publicación
-# Esta ruta es pública.# Reemplazar con un ID de publicación existente. Nota: Usar el ID de la publicación
-GET http://localhost:3000/api/publicaciones/ID_PUBLICACION/comentarios
-
-### Comentar en una publicación
-# Requiere que el usuario esté autenticado. Nota: Usar el ID de la publicación a comentar y Usar el token JWT obtenido del login
-POST http://localhost:3000/api/publicaciones/ID_PUBLICACION/comentarios
+POST http://localhost:3000/api/publicaciones/65bd8a46-4989-4ddb-95f4-e319b42b9f27/comentarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjoiYjY5YTI4ZmQtYTAwOS00MzUzLWE3N2EtZTNhMzEzZTA4OTZlIiwiaWF0IjoxNzU1MDY5NTA3LCJleHAiOjE3NTUxMTI3MDd9.AAIzNdcYA7q0GSa-DOBJWE1-w77u8g9ISJhbdR-5bdU
 Content-Type: application/json
-Authorization: Bearer TOKEN_JWT
 
 {
-  "contenido": "¡Excelente publicación! Me ha sido de gran ayuda."
+    "contenido": "Comentario"
 }
