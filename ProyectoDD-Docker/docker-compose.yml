@@ -3,17 +3,18 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    container_name: blog_personal_mysql 
+    container_name: ProyectoDD
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: unah1234
-      MYSQL_DATABASE: blog_personal_db 
+      MYSQL_DATABASE: blog
       MYSQL_USER: unah
       MYSQL_PASSWORD: unah1234
     ports:
-      - "3307:3306" 
+      - "3310:3306"
     volumes:
-      - mysql_data:/var/lib/mysql 
-      - ./init:/docker-entrypoint-initdb.d 
+      - mysql_data3:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
 volumes:
-  mysql_data: 
+  mysql_data3:
