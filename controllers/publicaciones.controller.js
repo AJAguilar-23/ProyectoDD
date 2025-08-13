@@ -1,4 +1,5 @@
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
+import { validatePubliCreate, validatePubliUpdate } from "../schemas/publicacion.schema.js";
 // Funciones del modelo de publicaciones
 import {
     getAllPublicaciones,
@@ -20,7 +21,7 @@ export const getAllPublic = async (req, res) => {
     const offset = (page - 1) * limit; // Calcular el offset para la consulta SQL
 
     try {
-        const publicaciones = await getAllPublicaciones({ limit, offset }); // [16]
+        const publicaciones = await getAllPublicaciones({ limit, offset });
 
         // Si la consulta es exitosa, devuelve las publicaciones
         res.status(200).json({
@@ -82,33 +83,33 @@ export const getById = async (req, res) => {
  * @access Privada (solo usuario autenticado)
  */
 export const createPublic = async (req, res) => {
-    const { titulo, contenido, imagen_url } = req.body; 
-    const author_id = req.user.id; 
+    const parsed = validatePubliCreate(req.body);
 
-    // Validar datos de entrada
-    if (!titulo || !contenido) {
+    if (!parsed.success) {
+        const first = parsed.error.issues?.[0];
         return res.status(400).json({
-            success: false,
-            message: 'El título y el contenido son campos requeridos para crear una publicación.'
+        success: false,
+        message: first?.message || "Datos inválidos",
         });
     }
+    const { titulo, contenido} = parsed.data;
 
-    const id = uuidv4(); // Generar un ID UUID
+    const id = uuidv4();
+    const author_id = req.user.id;
+
+    const nueva = {
+        id,
+        title: titulo,
+        content: contenido,
+        author_id,
+    };
 
     try {
-        const nuevaPublicacion = {
-            id,
-            title: titulo,
-            content: contenido,
-            author_id
-            //imagen_url: imagen_url || null // opcional
-        };
-        await createPublicacion(nuevaPublicacion); 
-
-        res.status(201).json({ 
-            success: true,
-            message: 'Publicación creada exitosamente.',
-            data: nuevaPublicacion
+        await createPublicacion(nueva);
+        return res.status(201).json({
+        success: true,
+        message: "Publicación creada exitosamente.",
+        data: nueva,
         });
     } catch (error) {
         console.error('Error al crear la publicación:', error);
@@ -126,54 +127,47 @@ export const createPublic = async (req, res) => {
  * @access Privada (requiere autenticación y verificación de autoría)
  */
 export const updatePublic = async (req, res) => {
-    const { id } = req.params; 
-    const { titulo, contenido, imagen_url } = req.body; 
-    const author_id = req.user.id; 
+    const { id } = req.params;
 
-    // Validar datos de entrada
-    if (!titulo && !contenido && !imagen_url) {
+    // validar body con Zod (al menos un campo)
+    const parsed = validatePublicacionUpdate(req.body);
+    if (!parsed.success) {
+        const first = parsed.error.issues?.[0];
         return res.status(400).json({
-            success: false,
-            message: 'Se requiere al menos un campo (titulo o contenido ) para actualizar la publicación.'
+        success: false,
+        message: first?.message || "Datos inválidos",
         });
     }
+    const { titulo, contenido  } = parsed.data;
 
     try {
-
-        const existingPublicacion = await getPublicacionById(id);
-        if (!existingPublicacion || existingPublicacion.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Publicación no encontrada.'
-            });
+        const rows = await getPublicacionById(id);
+        if (!rows || rows.length === 0) {
+        return res.status(404).json({
+            success: false,
+            message: "Publicación no encontrada.",
+        });
         }
+        const existing = rows[0];
 
+        // aplica parches
         const updates = {
-            title: titulo || existingPublicacion.title, 
-            content: contenido || existingPublicacion.content, 
-            imagen_url: imagen_url !== undefined ? imagen_url : existingPublicacion.imagen_url 
+        title: titulo ?? existing.title,
+        content: contenido ?? existing.content,
         };
 
-        const result = await updatePublicacion(id, updates, author_id); 
-
-        if (result.affectedRows === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: 'No se pudo actualizar la publicación.'
-            });
-        }
+        await updatePublicacion(id, updates, req.user.id);
 
         res.status(200).json({
-            success: true,
-            message: 'Publicación actualizada exitosamente.',
-            data: { id, ...updates } 
+        success: true,
+        message: "Publicación actualizada exitosamente.",
+        data: { id, title: updates.title, content: updates.content },
         });
     } catch (error) {
         console.error('Error al actualizar la publicación:', error);
         res.status(500).json({
             success: false,
-            message: 'Error interno del servidor al actualizar la publicación.',
+            message: 'Error al actualizar la publicación.',
             error: error.message
         });
     }

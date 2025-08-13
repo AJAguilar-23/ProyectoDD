@@ -24,7 +24,7 @@ Content-Type: application/json
 # Este endpoint requiere que el usuario esté autenticado. Nota: Usar el token JWT obtenido del login
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzLTQ1YzAtNDdlMC05N2UxLWMzMjY5YWVhNmQwMCIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkVzB3THpQR3FicS83eHFUdHZ4TjVGLkxiQjlRZ2dwMlBHMmZxYVNRWGxwM3pKYm9tWWdkNWEiLCJpYXQiOjE3NTQ4NTUwNTAsImV4cCI6MTc1NDg1ODY1MH0.oVejHHe7bMdkks8gjK94PwNrfj0R-BbwlUGrP8bsUVk 
+Authorization: Bearer TOKEN_JWT
 
 {
   "old_password": "1234",
@@ -39,40 +39,39 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzL
 
 ### Listar todas las publicaciones con paginación
 # Esta ruta es pública y no requiere autenticación.
+# Para paginación, usar los parámetros `page` y `limit` pagina por defecto 1 y límite 10.
 GET http://localhost:3000/api/publicaciones?page=1&limit=10
 
 ### Ver una publicación específica
 # Esta ruta es pública y no requiere autenticación. Nota: Usar un ID de publicación existente
-GET http://localhost:3000/api/publicaciones/31cb19a7-8d30-46b7-a7fd-cf7efc85b858 
+GET http://localhost:3000/api/publicaciones/ID_PUBLICACION 
 
 ### Crear una nueva publicación
 # Requiere que el usuario esté autenticado. Nota: Usar el token JWT obtenido del login
 POST http://localhost:3000/api/publicaciones
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzLTQ1YzAtNDdlMC05N2UxLWMzMjY5YWVhNmQwMCIsImlhdCI6MTc1NDg3NTI2MSwiZXhwIjoxNzU0OTE4NDYxfQ.5YEq3hokhT_UQsaK78AtHdVRZS1p87bjZe3zGtKHyz4
+Authorization: Bearer TOKEN_JWT
 
 {
-  "titulo": "Mi Primera Publicación de Blog4",
+  "titulo": "Mi Primera Publicación de Blog 5",
   "contenido": "Este es el contenido de mi primera publicación. ¡Espero que les guste!"
-  //"imagen_url": "https://example.com/imagen_publicacion.jpg"
 }
 
 ### Editar una publicación (solo el autor)
 # Requiere autenticación y verificación de propiedad. Nota: Usar el ID de la publicación a editar y Usar el token JWT obtenido del login
-PUT http://localhost:3000/api/publicaciones/31cb19a7-8d30-46b7-a7fd-cf7efc85b858  
+PUT http://localhost:3000/api/publicaciones/ID_PUBLICACION
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzLTQ1YzAtNDdlMC05N2UxLWMzMjY5YWVhNmQwMCIsImlhdCI6MTc1NDg3NjM5NCwiZXhwIjoxNzU0OTE5NTk0fQ._n3wiOV7jq8uLIvKHWNKRJINS667mhjeUqtouhMEZI4
+Authorization: Bearer TOKEN_JWT
 
 {
   "titulo": "Mi Publicación 2 Editada",
   "contenido": "Este es el contenido actualizado de mi publicación. ¡Ahora es mejor!"
-  //"imagen_url": "https://example.com/imagen_publicacion_editada.jpg"
 }
 
 ### Eliminar una publicación (solo el autor)
 # Requiere autenticación y verificación de propiedad. Nota: Usar el ID de la publicación a eliminar y Usar el token JWT obtenido del login
-DELETE http://localhost:3000/api/publicaciones/eeb307f6-bca1-4ef4-94dc-9b33920294be 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzLTQ1YzAtNDdlMC05N2UxLWMzMjY5YWVhNmQwMCIsImlhdCI6MTc1NDg3NjM5NCwiZXhwIjoxNzU0OTE5NTk0fQ._n3wiOV7jq8uLIvKHWNKRJINS667mhjeUqtouhMEZI4
+DELETE http://localhost:3000/api/publicaciones/ID_PUBLICACION
+Authorization: Bearer TOKEN_JWT
 
 
 
@@ -81,13 +80,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzL
 
 ### Ver todos los comentarios de una publicación
 # Esta ruta es pública.# Reemplazar con un ID de publicación existente. Nota: Usar el ID de la publicación
-GET http://localhost:3000/api/publicaciones/31cb19a7-8d30-46b7-a7fd-cf7efc85b858/comentarios 
+GET http://localhost:3000/api/publicaciones/ID_PUBLICACION/comentarios
 
 ### Comentar en una publicación
 # Requiere que el usuario esté autenticado. Nota: Usar el ID de la publicación a comentar y Usar el token JWT obtenido del login
-POST http://localhost:3000/api/publicaciones/1cb19a7-8d30-46b7-a7fd-cf7efc85b858/comentarios
+POST http://localhost:3000/api/publicaciones/ID_PUBLICACION/comentarios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNjNjJlNzIzLTQ1YzAtNDdlMC05N2UxLWMzMjY5YWVhNmQwMCIsImlhdCI6MTc1NDg3NjM5NCwiZXhwIjoxNzU0OTE5NTk0fQ._n3wiOV7jq8uLIvKHWNKRJINS667mhjeUqtouhMEZI4
+Authorization: Bearer TOKEN_JWT
 
 {
   "contenido": "¡Excelente publicación! Me ha sido de gran ayuda."

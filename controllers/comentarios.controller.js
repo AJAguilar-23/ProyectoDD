@@ -5,8 +5,9 @@ import {
     getComentariosByPublicacion,
     createComentario
 } from '../models/comentarios.js';
+import { validateComentario } from "../schemas/comentario.schema.js";
 
-// Función para sanitizar contenido y prevenir XSS de forma manual
+// Función para sanitizar contenido y prevenir XSS 
 function sanitizeInput(str) {
     return str
         .replace(/&/g, "&amp;")
@@ -50,26 +51,21 @@ export const getComent = async (req, res) => {
  */
 export const createComent = async (req, res) => {
     const { id: publicacionId } = req.params;
-    const { contenido } = req.body;
     const user_id = req.user.id;
 
-    if (!contenido || contenido.trim() === '') {
+    // validacion con Zod
+    const parsed = validateComentario(req.body);
+    if (!parsed.success) {
+        const first = parsed.error.issues?.[0];
         return res.status(400).json({
-            success: false,
-            message: 'El contenido del comentario no puede estar vacío.'
+        success: false,
+        message: first?.message || "Datos inválidos",
+        errors: parsed.error.issues,
         });
     }
 
-    if (contenido.length > 1000) {
-        return res.status(400).json({
-            success: false,
-            message: 'El comentario excede la longitud máxima permitida (1000 caracteres).'
-        });
-    }
-
-    // Sanitizar manualmente
-    const sanitizedContent = sanitizeInput(contenido);
-
+    // sanitizar
+    const sanitizedContent = sanitizeInput(parsed.data.contenido);
     const id = uuidv4();
 
     try {
@@ -90,7 +86,7 @@ export const createComent = async (req, res) => {
         console.error('Error al crear el comentario:', error);
         res.status(500).json({
             success: false,
-            message: 'Error interno del servidor al crear el comentario.',
+            message: 'Error al crear el comentario.',
             error: error.message
         });
     }
