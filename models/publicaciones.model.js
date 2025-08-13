@@ -10,7 +10,7 @@ export const mostrarPublicacionesDB = async(limite, offset) => {
     const query = `SELECT 
     publicacion_id, titulo, contenido
     FROM publicaciones
-    ORDER BY fecha_hora 
+    ORDER BY fecha_hora DESC
     LIMIT ? OFFSET ?`
     const [resultado] = await pool.query(query, [limite, offset])
     return resultado
